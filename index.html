@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro para Terça-feira</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: url('https://source.unsplash.com/1600x900/?night,race') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        #timer {
+            font-size: 3em;
+            margin-top: 20vh;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            display: inline-block;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">Carregando...</div>
+    <script>
+        function getNextTuesday() {
+            let now = new Date();
+            let target = new Date(now);
+            target.setHours(19, 30, 0, 0);
+            
+            // Encontrar a próxima terça-feira
+            while (target.getDay() !== 2 || now >= target) {
+                target.setDate(target.getDate() + 1);
+                target.setHours(19, 30, 0, 0);
+            }
+            
+            // Se for depois das 21h de terça, definir para a próxima semana
+            if (now.getDay() === 2 && now.getHours() >= 21) {
+                target.setDate(target.getDate() + 7);
+            }
+            
+            return target;
+        }
+
+        function updateTimer() {
+            let now = new Date();
+            let target = getNextTuesday();
+            let diff = target - now;
+
+            if (diff <= 0) {
+                target.setDate(target.getDate() + 7);
+                diff = target - now;
+            }
+            
+            let hours = Math.floor(diff / (1000 * 60 * 60));
+            let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById("timer").innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        setInterval(updateTimer, 1000);
+    </script>
+</body>
+</html>
