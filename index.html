@@ -3,44 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cronômetro para Terça-feira</title>
+    <title>Corrida Terça-feira</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background: url('https://source.unsplash.com/1600x900/?night,race') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
+            background-color: #121212; /* Fundo escuro */
+            color: #e0e0e0; /* Texto claro */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
         #timer {
-            font-size: 3em;
-            margin-top: 20vh;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            display: inline-block;
-            border-radius: 10px;
+            font-size: 3.5em;
+            padding: 30px 40px;
+            background-color: rgba(30, 30, 30, 0.85); /* Fundo um pouco mais claro do que o body */
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
+
+        #title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #bbb;
+        }
+
+        /* Estilo para um efeito de corrida sutil */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            animation: runningLight 5s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes runningLight {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
     </style>
 </head>
 <body>
+    <div id="title">Próxima Corrida:</div>
     <div id="timer">Carregando...</div>
     <script>
         function getNextTuesday() {
             let now = new Date();
             let target = new Date(now);
             target.setHours(19, 30, 0, 0);
-            
+           
             // Encontrar a próxima terça-feira
             while (target.getDay() !== 2 || now >= target) {
                 target.setDate(target.getDate() + 1);
                 target.setHours(19, 30, 0, 0);
             }
-            
+           
             // Se for depois das 21h de terça, definir para a próxima semana
             if (now.getDay() === 2 && now.getHours() >= 21) {
                 target.setDate(target.getDate() + 7);
             }
-            
+           
             return target;
         }
 
@@ -53,14 +90,15 @@
                 target.setDate(target.getDate() + 7);
                 diff = target - now;
             }
-            
+           
             let hours = Math.floor(diff / (1000 * 60 * 60));
             let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
+           
             document.getElementById("timer").innerText = `${hours}h ${minutes}m ${seconds}s`;
         }
-        
+
+        updateTimer();
         setInterval(updateTimer, 1000);
     </script>
 </body>
